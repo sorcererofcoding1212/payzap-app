@@ -1,0 +1,1 @@
+export type Duration = "DAY" | "WEEK" | "MONTH";
