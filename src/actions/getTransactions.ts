@@ -133,7 +133,7 @@ export const getTransactions = async () => {
     ].sort((a, b) => b.startTime.getTime() - a.startTime.getTime());
 
     return transactions;
-  } catch (error) {
+  } catch {
     return [];
   }
 };

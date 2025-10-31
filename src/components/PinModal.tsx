@@ -6,7 +6,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { validateAccountPin } from "@/actions/validateAccountPin";
-import { cn } from "@/lib/utils";
 
 interface PinModalProps {
   open: boolean;

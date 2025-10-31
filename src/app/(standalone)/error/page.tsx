@@ -1,5 +1,5 @@
 import React from "react";
-import { poppins } from "../layout";
+import { poppins } from "@/fonts/poppins";
 
 const ErrorPage = () => {
   return (

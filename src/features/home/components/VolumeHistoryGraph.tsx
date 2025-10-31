@@ -37,7 +37,7 @@ export const VolumeHistoryGraph = () => {
           }))
         );
       }
-    } catch (error) {
+    } catch {
       toast.error("Internal server error");
     } finally {
       setLoading(false);

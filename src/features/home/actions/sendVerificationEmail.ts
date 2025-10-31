@@ -1,6 +1,5 @@
 "use server";
 
-import { validateSession } from "@/actions/validateSession";
 import { sendMail } from "@/lib/mail";
 import jwt from "jsonwebtoken";
 

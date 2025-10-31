@@ -4,7 +4,7 @@ import { TransactionHistory } from "@/features/transactions/components/Transacti
 import React from "react";
 
 const TransactionsPage = async () => {
-  const session = await validateSession();
+  await validateSession();
   return (
     <div className="px-2 lg:px-6">
       <PageTitle title="Transactions" />

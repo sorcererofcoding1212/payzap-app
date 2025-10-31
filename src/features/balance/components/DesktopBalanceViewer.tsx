@@ -37,7 +37,7 @@ export const DesktopBalanceViewer = () => {
     return () => {
       setPinVerified(false);
     };
-  }, [pinVerified, balance]);
+  }, [pinVerified, balance, setPinVerified]);
   return (
     <div className="w-[40%] hidden lg:flex flex-col justify-between">
       <Card className="w-full h-fit hidden lg:flex">

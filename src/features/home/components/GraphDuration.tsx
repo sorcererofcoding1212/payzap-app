@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Duration } from "@/lib/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 interface DurationValue {
   duration: Duration;
@@ -17,11 +17,11 @@ export const GraphDuration = ({
   durationValue,
   setDurationValue,
 }: GraphDurationProps) => {
-  const [radioValues, setRadioValues] = useState<DurationValue[]>([
+  const radioValues: DurationValue[] = [
     { duration: "DAY", value: "Daily" },
     { duration: "WEEK", value: "Weekly" },
     { duration: "MONTH", value: "Monthly" },
-  ]);
+  ];
 
   return (
     <RadioGroup

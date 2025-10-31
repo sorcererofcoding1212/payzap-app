@@ -15,7 +15,7 @@ export const useEmailVerify = (email: string, name?: string) => {
         return;
       }
       toast.success("Verification email sent to registered email address");
-    } catch (error) {
+    } catch {
       toast.error("Some error occured");
     } finally {
       setLoading(false);

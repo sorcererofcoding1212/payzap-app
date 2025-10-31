@@ -33,7 +33,7 @@ export const GroupedTransactionGraph = () => {
       if (groupedResponse.data.length > 0) {
         setGroupedExpenses(groupedResponse.data);
       }
-    } catch (error) {
+    } catch {
       toast.error("Internal server error");
     } finally {
       setLoading(false);

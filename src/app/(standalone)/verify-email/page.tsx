@@ -1,16 +1,15 @@
 import React from "react";
-import { poppins } from "../layout";
+import { poppins } from "@/fonts/poppins";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { verifyEmailToken } from "@/features/standalone/actions/verifyEmailToken";
 import { ResendVerificationLinkButton } from "@/features/standalone/components/ResendVerificationLinkButton";
 
 interface VerifyEmailPageProps {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token: string }>;
 }
 
-const VerifyEmailPage = async ({
-  searchParams: { token },
-}: VerifyEmailPageProps) => {
+const VerifyEmailPage = async ({ searchParams }: VerifyEmailPageProps) => {
+  const { token } = await searchParams;
   const result = await verifyEmailToken(token);
 
   if (!result.success) {

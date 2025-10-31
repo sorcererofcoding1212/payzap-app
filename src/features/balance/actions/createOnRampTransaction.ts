@@ -55,7 +55,7 @@ export const createOnRampTransaction = async (
       msg: "Transaction initiated",
       token,
     };
-  } catch (error) {
+  } catch {
     return {
       msg: "Internal server error",
       success: false,

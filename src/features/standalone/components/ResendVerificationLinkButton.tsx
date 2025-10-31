@@ -11,13 +11,14 @@ interface ResendVerificationLinkButtonProps {
 export const ResendVerificationLinkButton = ({
   email,
 }: ResendVerificationLinkButtonProps) => {
+  const { verifyEmail } = useEmailVerify(email || "");
+
   const checkEmailExistsAndResendLink = () => {
-    if (!email) {
+    if (!email || email.length < 1) {
       toast.error("Invalid request");
       return;
     }
 
-    const { verifyEmail } = useEmailVerify(email);
     verifyEmail();
   };
 

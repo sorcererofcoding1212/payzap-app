@@ -4,7 +4,7 @@ import { checkAccountPinExists } from "@/actions/checkAccountPinExists";
 import { fetchUserBalance } from "@/actions/fetchUserBalance";
 import { CreatePinModal } from "@/components/CreatePinModal";
 import { PinModal } from "@/components/PinModal";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useAccountStore } from "@/store/accountStore";
 import { useEffect, useState } from "react";
 import { MdOutlineArrowCircleRight } from "react-icons/md";
@@ -35,7 +35,7 @@ export const MobileBalanceViewer = () => {
     return () => {
       setPinVerified(false);
     };
-  }, [pinVerified]);
+  }, [pinVerified, setPinVerified]);
   return (
     <Card className="lg:hidden mb-4 border-none w-[80%] mx-auto">
       <CardContent className="min-h-6 flex items-center justify-center">

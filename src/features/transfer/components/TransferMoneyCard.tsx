@@ -61,7 +61,7 @@ export const TransferMoneyCard = ({
     } else {
       setVariant("Bank");
     }
-  }, [variant]);
+  }, [variant, form]);
 
   const [isSubmittingForm, setIsSubmittingForm] = useState<boolean>(false);
 

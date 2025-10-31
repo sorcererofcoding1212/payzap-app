@@ -29,7 +29,7 @@ export const checkEmailVerify = async (userId: string) => {
       emailVerified,
       name,
     };
-  } catch (error) {
+  } catch {
     return {
       msg: "Internal server error",
       success: false,
