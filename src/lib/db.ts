@@ -5,8 +5,9 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-const enginePath = path.resolve(
-  "node_modules/@manvirsingh7/payzap-database/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node"
+const enginePath = path.join(
+  process.cwd(),
+  "node_modules/@manvirsingh7/payzap-database/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node"
 );
 
 process.env.PRISMA_QUERY_ENGINE_LIBRARY = enginePath;
