@@ -25,11 +25,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SUPPORTED_BANKS } from "@/lib/constants";
 import { createOnRampTransaction } from "../actions/createOnRampTransaction";
-import { BANK_URL } from "@/config/config";
 import { useAccountStore } from "@/store/accountStore";
 import { adjustAmount } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
+import { PUBLIC_BANK_URL } from "@/config/config";
 
 interface AddMoneyCardProps {
   isEmailVerified: boolean | undefined;
@@ -58,7 +58,10 @@ export const AddMoneyCard = ({ isEmailVerified }: AddMoneyCardProps) => {
     const response = await createOnRampTransaction(amount, values.bank);
 
     if (response.token) {
-      window.open(`${BANK_URL}/netbanking?token=${response.token}`, "_blank");
+      window.open(
+        `${PUBLIC_BANK_URL}/netbanking?token=${response.token}`,
+        "_blank"
+      );
 
       setPinVerified(false);
       setIsSubmittingForm(false);
