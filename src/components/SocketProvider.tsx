@@ -1,6 +1,6 @@
 "use client";
 
-import { SOCKET_URL } from "@/config/config";
+import { PUBLIC_SOCKET_URL } from "@/config/config";
 import { CONNECTION, NOTIFICATION } from "@/lib/constants";
 import { useSocketStore } from "@/store/socketStore";
 import { IncomingRequest } from "@/types/incomingRequest";
@@ -20,7 +20,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   useEffect(() => {
     if (status !== "authenticated" || !data?.user?.id) return;
 
-    const socket = new WebSocket(SOCKET_URL || "http://localhost:8080");
+    const socket = new WebSocket(PUBLIC_SOCKET_URL || "http://localhost:8080");
 
     const outgoingMessage: OutgoingRequest = {
       type: CONNECTION,
