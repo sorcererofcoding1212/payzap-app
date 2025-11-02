@@ -108,6 +108,7 @@ export const getTransactions = async () => {
       .findMany({
         where: {
           accountId,
+          status: "Success",
         },
 
         select: {
