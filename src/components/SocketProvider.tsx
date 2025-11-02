@@ -20,7 +20,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   useEffect(() => {
     if (status !== "authenticated" || !data?.user?.id) return;
 
-    const socket = new WebSocket(SOCKET_URL);
+    const socket = new WebSocket(SOCKET_URL || "http://localhost:8080");
 
     const outgoingMessage: OutgoingRequest = {
       type: CONNECTION,
