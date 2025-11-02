@@ -1,2 +1,2 @@
-export const BANK_URL = "http://localhost:4000";
-export const SOCKET_URL = "http://localhost:8080";
+export const BANK_URL = process.env.BANK_URL
+export const SOCKET_URL = process.env.SOCKET_URL
