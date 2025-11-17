@@ -21,7 +21,10 @@ process.env.PRISMA_QUERY_ENGINE_LIBRARY = enginePath;
 export const prisma =
   global.prisma ??
   new PrismaClient({
-    log: ["query", "error"],
+    transactionOptions: {
+      maxWait: 5000,
+      timeout: 20000,
+    },
   });
 
 if (process.env.NODE_ENV !== "production") global.prisma = prisma;

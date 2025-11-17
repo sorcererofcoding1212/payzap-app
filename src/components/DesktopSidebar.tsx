@@ -18,11 +18,12 @@ export const DesktopSidebar = () => {
           {session.status === "loading" ? (
             <Skeleton className="h-12" />
           ) : (
-            <div className="h-12 rounded-md flex items-center text-sm px-8 bg-base-300 font-medium">
-              {generateWalletId(
-                session.data?.user.email || "johndoe@gmail.com"
-              )}
-            </div>
+            session.data &&
+            session.data.user && (
+              <div className="h-12 rounded-md flex items-center text-sm px-8 bg-base-300 font-medium">
+                {generateWalletId(session.data.user.email)}
+              </div>
+            )
           )}
         </div>
         <div className="pt-10 w-full flex items-center gap-y-2 flex-col">

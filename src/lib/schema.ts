@@ -14,13 +14,16 @@ export const registerSchema = z.object({
 export const addMoneySchema = z.object({
   amount: z
     .number()
-    .min(50, { error: "Minimum 50 rupees are required" })
+    .min(50, { error: "Please enter an amount of at least ₹50." })
     .optional(),
   bank: z.string(),
 });
 
 export const transferMoneySchema = z.object({
-  amount: z.number().min(50, { error: "Minimum 50 rupees are required" }),
+  amount: z
+    .number()
+    .min(50, { error: "Please enter an amount of at least ₹50." })
+    .max(10000, { error: "Amount exceeds the allowed limit of ₹10,000." }),
   transferAccount: z.string(),
   bank: z.string().optional(),
 });

@@ -41,11 +41,12 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
               <Skeleton className="h-[80%]" />
             </div>
           ) : (
-            <div className="h-12 mt-2 mb-4 rounded-md flex items-center justify-center text-sm bg-base-300 font-medium">
-              {generateWalletId(
-                session.data?.user.email || "johndoe@gmail.com"
-              )}
-            </div>
+            session.data &&
+            session.data.user && (
+              <div className="h-12 mt-2 mb-4 rounded-md flex items-center justify-center text-sm bg-base-300 font-medium">
+                {generateWalletId(session.data.user.email)}
+              </div>
+            )
           )}
         </SidebarHeader>
         <SidebarMenu className="mt-2">

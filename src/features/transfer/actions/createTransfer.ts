@@ -3,10 +3,17 @@
 import { notifyUser } from "@/actions/notifyUser";
 import { validateSession } from "@/actions/validateSession";
 import { prisma } from "@/lib/db";
+import { adjustAmount } from "@/lib/utils";
 
 export const createTransaction = async (amount: number, walletId: string) => {
   try {
     const session = await validateSession();
+
+    if (adjustAmount(amount, "APPLICATION") < 50)
+      throw new Error("Please enter an amount of at least ₹50.");
+
+    if (adjustAmount(amount, "APPLICATION") > 10000)
+      throw new Error("Amount exceeds the allowed limit of ₹10,000.");
 
     const response = await prisma.$transaction(async (txn) => {
       const sender = await txn.account.findUnique({
@@ -46,19 +53,13 @@ export const createTransaction = async (amount: number, walletId: string) => {
         },
       });
 
-      if (
-        !sender ||
-        !reciever ||
-        !sender.balance ||
-        !reciever.balance ||
-        !reciever.user.emailVerified
-      ) {
+      if (!sender || !reciever || !sender.balance || !reciever.balance)
         throw new Error("Account does not exist");
-      }
 
-      if (sender.walletId === walletId) {
+      if (!reciever.user.emailVerified) throw new Error("Email not verified");
+
+      if (sender.walletId === walletId)
         throw new Error("Invalid transfer request");
-      }
 
       const availableBalance = sender.balance.amount >= amount;
 
@@ -99,7 +100,7 @@ export const createTransaction = async (amount: number, walletId: string) => {
           data: { accountId: reciever.id, balance: recieverBalance.amount },
         });
 
-        return await txn.p2PTransaction.create({
+        const transaction = await txn.p2PTransaction.create({
           data: {
             initiatedById: sender.id,
             initiatedToId: reciever.id,
@@ -108,8 +109,36 @@ export const createTransaction = async (amount: number, walletId: string) => {
             amount,
           },
         });
+
+        await txn.ledgerEntry.createMany({
+          data: [
+            {
+              accountId: sender.id,
+              amount: amount,
+              type: "DEBIT",
+              transactionId: transaction.id,
+            },
+            {
+              accountId: reciever.id,
+              amount: amount,
+              type: "CREDIT",
+              transactionId: transaction.id,
+            },
+          ],
+        });
+
+        return {
+          msg: "Transaction Completed",
+          transaction: {
+            id: transaction.id,
+            status: transaction.status,
+            initiatedById: transaction.initiatedById,
+            initiatedToId: transaction.initiatedToId,
+            amount: transaction.amount,
+          },
+        };
       } else {
-        return await txn.p2PTransaction.create({
+        const transaction = await txn.p2PTransaction.create({
           data: {
             initiatedById: sender.id,
             initiatedToId: reciever.id,
@@ -118,22 +147,33 @@ export const createTransaction = async (amount: number, walletId: string) => {
             amount,
           },
         });
+
+        return {
+          msg: "Insufficient Balance",
+          transaction: {
+            id: transaction.id,
+            status: transaction.status,
+            initiatedById: transaction.initiatedById,
+            initiatedToId: transaction.initiatedToId,
+            amount: transaction.amount,
+          },
+        };
       }
     });
 
-    if (response.status === "Success") {
+    if (response.transaction.status === "Success") {
       await notifyUser(
-        response.initiatedToId,
-        response.initiatedById,
-        response.amount
+        response.transaction.initiatedToId,
+        response.transaction.initiatedById,
+        response.transaction.amount
       );
       return {
-        msg: "Transaction completed",
+        msg: response.msg,
         success: true,
       };
     } else {
       return {
-        msg: "Transaction Failed",
+        msg: response.msg,
         success: false,
       };
     }
