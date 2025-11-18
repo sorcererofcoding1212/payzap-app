@@ -38,6 +38,7 @@ export const DesktopEmailVerifierCard = ({
             <MdOutlineArrowCircleRight
               onClick={() => {
                 console.log("Initiated email verify call from the button");
+                verifyEmail();
               }}
               className={cn(
                 "cursor-pointer text-base-content",
