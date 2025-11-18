@@ -23,7 +23,10 @@ export const userRegister = async ({
     });
 
     if (existingUser) {
-      throw new Error("User already exists");
+      return {
+        msg: "User already exists",
+        success: false,
+      };
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,9 +66,8 @@ export const userRegister = async ({
 
     return { data: user, msg: "User registered", success: true };
   } catch (error: any) {
-    console.log(error);
     return {
-      msg: error.message || "Internal server error",
+      msg: "Internal server error",
       success: false,
     };
   }

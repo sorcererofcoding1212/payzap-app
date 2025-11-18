@@ -4,62 +4,69 @@ import { notifyUser } from "@/actions/notifyUser";
 import { validateSession } from "@/actions/validateSession";
 import { prisma } from "@/lib/db";
 import { adjustAmount } from "@/lib/utils";
+import { errorMessage } from "../lib/errorMessages";
 
 export const createTransaction = async (amount: number, walletId: string) => {
   try {
     const session = await validateSession();
 
     if (adjustAmount(amount, "APPLICATION") < 50)
-      throw new Error("Please enter an amount of at least ₹50.");
+      throw new Error(errorMessage.MIN_LIMIT);
 
     if (adjustAmount(amount, "APPLICATION") > 10000)
-      throw new Error("Amount exceeds the allowed limit of ₹10,000.");
+      throw new Error(errorMessage.MAX_LIMIT);
+
+    const sender = await prisma.account.findUnique({
+      where: {
+        userId: session.user.id,
+      },
+
+      select: {
+        balance: {
+          select: {
+            amount: true,
+            id: true,
+          },
+        },
+        walletId: true,
+        id: true,
+        user: {
+          select: {
+            emailVerified: true,
+          },
+        },
+      },
+    });
+
+    const reciever = await prisma.account.findUnique({
+      where: {
+        walletId,
+      },
+
+      select: {
+        id: true,
+        balance: {
+          select: {
+            id: true,
+          },
+        },
+        user: {
+          select: {
+            emailVerified: true,
+          },
+        },
+      },
+    });
 
     const response = await prisma.$transaction(async (txn) => {
-      const sender = await txn.account.findUnique({
-        where: {
-          userId: session.user.id,
-        },
-
-        select: {
-          balance: {
-            select: {
-              amount: true,
-              id: true,
-            },
-          },
-          walletId: true,
-          id: true,
-        },
-      });
-
-      const reciever = await txn.account.findUnique({
-        where: {
-          walletId,
-        },
-
-        select: {
-          id: true,
-          balance: {
-            select: {
-              id: true,
-            },
-          },
-          user: {
-            select: {
-              emailVerified: true,
-            },
-          },
-        },
-      });
-
       if (!sender || !reciever || !sender.balance || !reciever.balance)
-        throw new Error("Account does not exist");
+        throw new Error(errorMessage.ACCOUNT_NOT_FOUND);
 
-      if (!reciever.user.emailVerified) throw new Error("Email not verified");
+      if (!sender.user.emailVerified || !reciever.user.emailVerified)
+        throw new Error(errorMessage.EMAIL_NOT_VERIFIED);
 
       if (sender.walletId === walletId)
-        throw new Error("Invalid transfer request");
+        throw new Error(errorMessage.INVALID_REQUEST);
 
       const availableBalance = sender.balance.amount >= amount;
 
@@ -117,12 +124,14 @@ export const createTransaction = async (amount: number, walletId: string) => {
               amount: amount,
               type: "DEBIT",
               transactionId: transaction.id,
+              createdAt: transaction.startTime,
             },
             {
               accountId: reciever.id,
               amount: amount,
               type: "CREDIT",
               transactionId: transaction.id,
+              createdAt: transaction.startTime,
             },
           ],
         });
@@ -178,8 +187,23 @@ export const createTransaction = async (amount: number, walletId: string) => {
       };
     }
   } catch (error: any) {
+    const expectedErrors = [
+      errorMessage.ACCOUNT_NOT_FOUND,
+      errorMessage.EMAIL_NOT_VERIFIED,
+      errorMessage.INVALID_REQUEST,
+      errorMessage.MIN_LIMIT,
+      errorMessage.MAX_LIMIT,
+    ];
+
+    if (!expectedErrors.includes(error.message)) {
+      return {
+        msg: errorMessage.SERVER_ERROR,
+        success: false,
+      };
+    }
+
     return {
-      msg: error.message || "Internal server error",
+      msg: error.message || errorMessage.SERVER_ERROR,
       success: false,
     };
   }

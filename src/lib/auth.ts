@@ -5,7 +5,7 @@ import { AuthOptions } from "next-auth";
 import { loginSchema } from "./schema";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
-import { generateWalletId } from "./utils";
+import { adjustAmount, generateWalletId } from "./utils";
 
 export const AUTH_OPTIONS: AuthOptions = {
   providers: [
@@ -40,6 +40,14 @@ export const AUTH_OPTIONS: AuthOptions = {
         const user = await prisma.user.findUnique({
           where: {
             email,
+          },
+
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            password: true,
+            emailVerified: true,
           },
         });
 
@@ -127,13 +135,16 @@ export const AUTH_OPTIONS: AuthOptions = {
                     walletId,
                     balance: {
                       create: {
-                        amount: 0,
+                        amount: adjustAmount(5000, "DATABASE"),
                         locked: 0,
                       },
                     },
                     balanceHistory: {
-                      create: {
-                        balance: 0,
+                      createMany: {
+                        data: [
+                          { balance: 0 },
+                          { balance: adjustAmount(5000, "DATABASE") },
+                        ],
                       },
                     },
                   },
