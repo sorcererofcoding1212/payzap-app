@@ -1,14 +1,15 @@
 import nodemailer from "nodemailer";
 
-console.log(process.env.EMAIL_USER);
-console.log(process.env.EMAIL_PASS);
-console.log(process.env.EMAIL_FROM);
-
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 
@@ -28,6 +29,7 @@ export async function sendMail({ to, subject, html }: SendMailProps) {
     });
     return { success: true };
   } catch (error) {
+    console.log("MAIL_ERROR : ", error);
     return { success: false, error };
   }
 }
