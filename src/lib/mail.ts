@@ -21,6 +21,7 @@ interface SendMailProps {
 
 export async function sendMail({ to, subject, html }: SendMailProps) {
   try {
+    console.log("Inside the main send mail function");
     await transporter.sendMail({
       from: process.env.EMAIL_FROM,
       to,
