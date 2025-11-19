@@ -1,17 +1,6 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface SendMailProps {
   to: string;
@@ -21,16 +10,16 @@ interface SendMailProps {
 
 export async function sendMail({ to, subject, html }: SendMailProps) {
   try {
-    console.log("Inside the main send mail function");
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+    const response = await resend.emails.send({
+      from: "Payzap <onboarding@manvir.site>",
       to,
       subject,
       html,
     });
+    if (response.error) return { success: false, error: response.error };
     return { success: true };
   } catch (error) {
-    console.log("MAIL_ERROR : ", error);
+    console.log("MAIL_ERROR:", error);
     return { success: false, error };
   }
 }

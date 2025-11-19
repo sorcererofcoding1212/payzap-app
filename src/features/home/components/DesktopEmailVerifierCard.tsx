@@ -36,10 +36,7 @@ export const DesktopEmailVerifierCard = ({
           <div className="text-base-content h-6 flex gap-x-2 items-center">
             <div className="text-sm font-medium">Verify your email</div>
             <MdOutlineArrowCircleRight
-              onClick={() => {
-                console.log("Initiated email verify call from the button");
-                verifyEmail();
-              }}
+              onClick={verifyEmail}
               className={cn(
                 "cursor-pointer text-base-content",
                 loading && "animate-pulse opacity-70 cursor-not-allowed"

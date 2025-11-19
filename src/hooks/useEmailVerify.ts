@@ -11,7 +11,6 @@ export const useEmailVerify = (email: string, name?: string) => {
     try {
       if (loading) return;
       setLoading(true);
-      console.log("Verification initiated from email verify hook");
       const { success } = await sendVerificationEmail(email, name);
       if (!success) {
         toast.error("Some error occured");

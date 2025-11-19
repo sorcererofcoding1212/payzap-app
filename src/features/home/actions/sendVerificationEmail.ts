@@ -4,15 +4,12 @@ import { sendMail } from "@/lib/mail";
 import jwt from "jsonwebtoken";
 
 export const sendVerificationEmail = async (email: string, name?: string) => {
-  console.log("Inside the send verification server action");
   try {
     const token = jwt.sign({ email }, process.env.JWT_SECRET || "mysecretkey", {
       expiresIn: "30m",
     });
 
     const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
-
-    console.log(process.env.NEXT_PUBLIC_APP_URL);
 
     const { success } = await sendMail({
       to: email,
