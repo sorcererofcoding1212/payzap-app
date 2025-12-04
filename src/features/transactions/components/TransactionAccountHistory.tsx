@@ -22,9 +22,10 @@ export const TransactionAccountHistory = ({
   onClose,
 }: TransactionAccountHistoryProps) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["account_transactions"],
+    queryKey: ["account_transactions", counterPartyAccountId],
     queryFn: () => getAccountTransactions(counterPartyAccountId),
     staleTime: 30_000,
+    enabled: !!counterPartyAccountId,
   });
   return (
     <div className="px-3 lg:px-6 text-base-content">

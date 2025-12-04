@@ -24,49 +24,61 @@ export const AUTH_OPTIONS: AuthOptions = {
         },
       },
       async authorize(credentials) {
-        if (!credentials) {
-          throw new Error("Invalid inputs provided");
+        try {
+          if (!credentials) {
+            throw new Error("Invalid inputs provided");
+          }
+
+          const { email, password } = credentials;
+
+          const { success, error } = loginSchema.safeParse({ email, password });
+
+          if (!success) {
+            console.log(error);
+            throw new Error("Invalid inputs provided");
+          }
+
+          const user = await prisma.user.findUnique({
+            where: {
+              email,
+            },
+
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              password: true,
+              emailVerified: true,
+            },
+          });
+
+          if (!user || !user.password) {
+            throw new Error("Invalid credentials provided");
+          }
+
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+
+          if (!isPasswordValid) {
+            throw new Error("Invalid credentials provided");
+          }
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            emailVerified: user.emailVerified,
+          };
+        } catch (error: any) {
+          if (
+            error.message === "Invalid credentials provided" ||
+            "Invalid inputs provided"
+          ) {
+            throw new Error(error.message);
+          } else {
+            console.log(error);
+            throw new Error("Internal server error");
+          }
         }
-
-        const { email, password } = credentials;
-
-        const { success, error } = loginSchema.safeParse({ email, password });
-
-        if (!success) {
-          console.log(error);
-          throw new Error("Invalid inputs provided");
-        }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            password: true,
-            emailVerified: true,
-          },
-        });
-
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials provided");
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials provided");
-        }
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          emailVerified: user.emailVerified,
-        };
       },
     }),
 
