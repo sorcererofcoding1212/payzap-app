@@ -47,6 +47,10 @@ export const AddMoneyCard = ({ isEmailVerified }: AddMoneyCardProps) => {
   const setPinVerified = useAccountStore((state) => state.setPinVerified);
 
   const onSubmit = async (values: z.infer<typeof addMoneySchema>) => {
+    if (values.bank.length < 1 || !values.amount || values.amount < 50) {
+      toast.error("Invalid inputs");
+      return;
+    }
     setIsSubmittingForm(true);
     if (!isEmailVerified) {
       toast.warning("Please verify your email first");

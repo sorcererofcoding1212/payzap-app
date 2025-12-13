@@ -26,6 +26,7 @@ export const DesktopSidebar = () => {
     refetch,
     unreadNotifications,
     loading,
+    isEmailVerified,
   } = useRealtimeNotifications();
 
   return (
@@ -69,6 +70,7 @@ export const DesktopSidebar = () => {
                   key={n.id}
                   notification={n}
                   refetch={refetch}
+                  emailVerified={isEmailVerified}
                 />
               ))
             )}
