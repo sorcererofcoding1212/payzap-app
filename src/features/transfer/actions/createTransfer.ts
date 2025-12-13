@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { adjustAmount } from "@/lib/utils";
 import { errorMessage } from "../lib/errorMessages";
 
-export const createTransaction = async (amount: number, walletId: string) => {
+export const createTransfer = async (amount: number, walletId: string) => {
   try {
     const session = await validateSession();
 
@@ -171,11 +171,29 @@ export const createTransaction = async (amount: number, walletId: string) => {
     });
 
     if (response.transaction.status === "Success") {
-      await notifyUser(
-        response.transaction.initiatedToId,
-        response.transaction.initiatedById,
-        response.transaction.amount
-      );
+      const notificationContent = `Received INR ${adjustAmount(
+        amount,
+        "APPLICATION"
+      )} from ${session.user.name}`;
+
+      const notification = await prisma.notification.create({
+        data: {
+          accountId: response.transaction.initiatedToId,
+          type: "AmountReceived",
+          content: notificationContent,
+          amount,
+        },
+
+        select: {
+          account: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      });
+
+      await notifyUser(notificationContent, notification.account.userId);
       return {
         msg: response.msg,
         success: true,

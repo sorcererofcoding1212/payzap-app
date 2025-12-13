@@ -16,7 +16,7 @@ import { transferMoneySchema } from "@/lib/schema";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createTransaction } from "../actions/createTransfer";
+import { createTransfer } from "../actions/createTransfer";
 import { adjustAmount, checkValidWalletId } from "@/lib/utils";
 import { toast } from "sonner";
 import { createOffRampTransaction } from "../actions/createOffRampTransaction";
@@ -117,7 +117,7 @@ export const TransferMoneyCard = ({
     setIsSubmittingForm(true);
 
     if (variant === "Wallet") {
-      const { success, msg } = await createTransaction(
+      const { success, msg } = await createTransfer(
         adjustAmount(Number(formData.amount), "DATABASE"),
         formData.transferAccount
       );
@@ -308,17 +308,15 @@ export const TransferMoneyCard = ({
             {variant === "Bank" ? "Wallet Transfer" : "Bank Transfer"}
           </Button>
         </div>
-        {errorMsg && (
-          <div className="text-red-500 text-sm text-center">{errorMsg}</div>
-        )}
+        <div className="text-red-500 text-sm text-center">
+          {errorMsg && errorMsg}
+        </div>
       </div>
       <PinModal
         open={openModal}
         setOpen={setOpenModal}
         onSuccess={() => {
-          if (!transferData) {
-            return;
-          }
+          if (!transferData) return;
           handleTransfer(transferData);
         }}
       />

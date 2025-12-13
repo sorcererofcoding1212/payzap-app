@@ -1,7 +1,7 @@
-const HomeLoading = () => {
+const Loading = () => {
   return (
     <div className="absolute flex justify-center items-center h-screen w-full bg-transparent top-0 left-0 z-50">
-      <div className="text-base-content lg:pl-72">
+      <div className="text-base-content">
         <div role="status">
           <svg
             aria-hidden="true"
@@ -26,4 +26,4 @@ const HomeLoading = () => {
   );
 };
 
-export default HomeLoading;
+export default Loading;

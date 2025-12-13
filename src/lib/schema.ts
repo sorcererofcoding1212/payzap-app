@@ -27,3 +27,11 @@ export const transferMoneySchema = z.object({
   transferAccount: z.string(),
   bank: z.string().optional(),
 });
+
+export const requestMoneySchema = z.object({
+  amount: z
+    .number()
+    .min(50, { error: "Please enter an amount of at least ₹50." })
+    .max(5000, { error: "Amount exceeds the allowed limit of ₹5,000." }),
+  requestToAccount: z.string(),
+});
