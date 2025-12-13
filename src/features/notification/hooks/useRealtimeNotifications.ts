@@ -4,14 +4,17 @@ import { useSocketStore } from "@/store/socketStore";
 import { IncomingRequest } from "@/types/incomingRequest";
 import { useEffect, useState } from "react";
 import { useNotifications } from "./useNotifications";
+import { useSession } from "next-auth/react";
 
 export const useRealtimeNotifications = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState<boolean>(false);
   const [unreadNotifications, setUnreadNotifications] = useState<number>(0);
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
   const { notifications, loading, refetch } = useNotifications();
   const [newNotificationsAvailable, setNewNotificationsAvailable] =
     useState<boolean>(false);
   const socket = useSocketStore((state) => state.socket);
+  const { status, data } = useSession();
 
   const checkUnreadNotifications = () => {
     const unreadNotificationsLength = notifications.filter(
@@ -69,6 +72,11 @@ export const useRealtimeNotifications = () => {
     }
   }, [isNotificationOpen]);
 
+  useEffect(() => {
+    if (!data) return;
+    setIsEmailVerified(data.user.emailVerified);
+  }, [status, data]);
+
   return {
     notifications,
     loading,
@@ -78,5 +86,6 @@ export const useRealtimeNotifications = () => {
     unreadNotifications,
     newNotificationsAvailable,
     setNewNotificationsAvailable,
+    isEmailVerified,
   };
 };

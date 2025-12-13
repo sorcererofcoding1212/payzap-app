@@ -13,17 +13,23 @@ import { toast } from "sonner";
 interface NotificationComponentProps {
   notification: Notification;
   refetch: () => void;
+  emailVerified: boolean;
 }
 
 export const NotificationComponent = ({
   notification,
   refetch,
+  emailVerified,
 }: NotificationComponentProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [openPinModal, setOpenPinModal] = useState<boolean>(false);
   const [openCreatePinModal, setOpenCreatePinModal] = useState<boolean>(false);
 
   const onInitialSubmit = async () => {
+    if (!emailVerified) {
+      toast.error("Verify your email first");
+      return;
+    }
     const { msg, success } = await checkAccountPinExists();
     if (!success) {
       toast.error(msg);

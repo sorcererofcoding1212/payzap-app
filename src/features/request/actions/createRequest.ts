@@ -38,11 +38,16 @@ export const createRequest = async (amount: number, walletId: string) => {
 
       select: {
         id: true,
-        userId: true,
+        user: {
+          select: {
+            id: true,
+            emailVerified: true,
+          },
+        },
       },
     });
 
-    if (!requestBy || !requestTo)
+    if (!requestBy || !requestTo || !requestTo.user.emailVerified)
       throw new Error(errorMessage.ACCOUNT_NOT_FOUND);
 
     const request = await prisma.request.create({
@@ -67,7 +72,7 @@ export const createRequest = async (amount: number, walletId: string) => {
       },
     });
 
-    await notifyUser(notificationContent, requestTo.userId);
+    await notifyUser(notificationContent, requestTo.user.id);
 
     return {
       success: true,

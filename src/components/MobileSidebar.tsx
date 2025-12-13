@@ -40,6 +40,7 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
     refetch,
     unreadNotifications,
     loading,
+    isEmailVerified,
   } = useRealtimeNotifications();
 
   return (
@@ -96,6 +97,7 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
                     key={n.id}
                     notification={n}
                     refetch={refetch}
+                    emailVerified={isEmailVerified}
                   />
                 ))
               )}
