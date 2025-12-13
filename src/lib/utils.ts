@@ -61,3 +61,29 @@ export const getTransactionTime = (txnDate: Date) => {
       : `${txnDate.getMinutes()}`
   }`;
 };
+
+export const truncateText = (str: string, max: number) => {
+  return str.length > max ? str.slice(0, max) + "…" : str;
+};
+
+export const readTime = (date: Date): string => {
+  const now = new Date();
+
+  const isSameDay = (a: Date, b: Date) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+
+  if (isSameDay(date, yesterday)) return "Yesterday";
+
+  if (isSameDay(date, now)) {
+    const hh = String(date.getHours()).padStart(2, "0");
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    return `${hh}:${mm}`;
+  }
+
+  return date.toLocaleDateString("en-US", { weekday: "short" });
+};

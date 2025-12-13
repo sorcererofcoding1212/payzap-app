@@ -6,6 +6,8 @@ import {
   LuClock,
   LuLogOut,
   LuWallet,
+  LuBell,
+  LuArrowRightFromLine,
 } from "react-icons/lu";
 
 interface RouteProp {
@@ -29,6 +31,11 @@ export const useRoutes = () => {
       icon: LuArrowLeftRight,
     },
     {
+      label: "Request",
+      href: "/request",
+      icon: LuArrowRightFromLine,
+    },
+    {
       label: "Transactions",
       href: "/transactions",
       icon: LuClock,
@@ -37,6 +44,11 @@ export const useRoutes = () => {
       label: "Balance",
       href: "/balance",
       icon: LuWallet,
+    },
+    {
+      label: "Notifications",
+      href: "/notifications",
+      icon: LuBell,
     },
     {
       label: "Logout",
