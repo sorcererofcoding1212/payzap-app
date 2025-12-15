@@ -1,23 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { ArrowLeft, MenuIcon, RefreshCcw } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { SidebarHeader, SidebarMenu, SidebarMenuItem } from "./ui/sidebar";
 import { UserAvatar } from "./UserAvatar";
 import { useRoutes } from "@/hooks/useRoutes";
-import { cn, generateWalletId, truncateText } from "@/lib/utils";
+import { cn, generateWalletId } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "./ui/skeleton";
-import { useNotifications } from "@/features/notification/hooks/useNotifications";
 import { InteractiveScrollArea } from "./InteractiveScrollArea";
 import { NotificationComponent } from "../features/notification/components/NotificationComponent";
 import { ComponentLoader } from "./ComponentLoader";
-import { serverInstance } from "@/lib/axios";
-import { NOTIFICATION } from "@/lib/constants";
-import { IncomingRequest } from "@/types/incomingRequest";
-import { useSocketStore } from "@/store/socketStore";
 import { useRealtimeNotifications } from "@/features/notification/hooks/useRealtimeNotifications";
 
 interface MobileSidebarProps {
@@ -40,7 +35,6 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
     refetch,
     unreadNotifications,
     loading,
-    isEmailVerified,
   } = useRealtimeNotifications();
 
   return (
@@ -97,7 +91,6 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
                     key={n.id}
                     notification={n}
                     refetch={refetch}
-                    emailVerified={isEmailVerified}
                   />
                 ))
               )}

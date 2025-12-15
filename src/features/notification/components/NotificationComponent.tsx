@@ -1,33 +1,43 @@
-"ue client";
+"use client";
 
 import { checkAccountPinExists } from "@/actions/checkAccountPinExists";
+import { checkEmailVerify } from "@/actions/checkEmailVerify";
 import { CreatePinModal } from "@/components/CreatePinModal";
 import { PinModal } from "@/components/PinModal";
 import { declineRequest } from "@/features/request/actions/declineRequest";
 import { transferRequest } from "@/features/request/actions/transferRequest";
 import { cn, readTime, truncateText } from "@/lib/utils";
 import { Notification } from "@manvirsingh7/payzap-database/generated/prisma/client";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface NotificationComponentProps {
   notification: Notification;
   refetch: () => void;
-  emailVerified: boolean;
 }
 
 export const NotificationComponent = ({
   notification,
   refetch,
-  emailVerified,
 }: NotificationComponentProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [openPinModal, setOpenPinModal] = useState<boolean>(false);
   const [openCreatePinModal, setOpenCreatePinModal] = useState<boolean>(false);
+  const { data, status } = useSession();
 
   const onInitialSubmit = async () => {
+    if (status === "loading") {
+      toast.loading("Please try again after some time");
+      return;
+    }
+    if (status === "unauthenticated" || !data) {
+      toast.error("Invalid request");
+      return;
+    }
+    const { emailVerified } = await checkEmailVerify(data.user.id);
     if (!emailVerified) {
-      toast.error("Verify your email first");
+      toast.error("Please verify your email first");
       return;
     }
     const { msg, success } = await checkAccountPinExists();
