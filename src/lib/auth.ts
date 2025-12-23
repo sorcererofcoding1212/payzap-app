@@ -186,6 +186,10 @@ export const AUTH_OPTIONS: AuthOptions = {
 
       return true;
     },
+
+    async redirect({ baseUrl }) {
+      return `${baseUrl}/dashboard`;
+    },
   },
 
   secret: process.env.NEXTAUTH_SECRET,
