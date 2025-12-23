@@ -73,7 +73,7 @@ export const SignupCard = () => {
       setIsSigningUp(false);
 
       if (res?.ok) {
-        router.push("/");
+        router.push("/dashboard");
       }
     }
   };

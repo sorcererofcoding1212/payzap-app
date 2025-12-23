@@ -6,7 +6,7 @@ import { GraphCarousel } from "@/features/home/components/GraphCarousel";
 import { MobileEmailVerifierCard } from "@/features/home/components/MobileEmailVerifierCard";
 import { redirect } from "next/navigation";
 
-const HomePage = async () => {
+const DashboardPage = async () => {
   const session = await validateSession();
   const { email, emailVerified, name } = await checkEmailVerify(
     session.user.id
@@ -35,4 +35,4 @@ const HomePage = async () => {
   );
 };
 
-export default HomePage;
+export default DashboardPage;
