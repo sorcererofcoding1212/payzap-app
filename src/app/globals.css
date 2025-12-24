@@ -1,10 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "daisyui" {
-  themes: forest --default;
+  themes: forest --default, silk;
 }
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

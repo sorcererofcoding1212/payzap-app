@@ -2,12 +2,12 @@ import { onLogout } from "@/lib/utils";
 import { IconType } from "react-icons/lib";
 import {
   LuArrowLeftRight,
-  LuHouse,
   LuClock,
   LuLogOut,
   LuWallet,
   LuBell,
   LuArrowRightFromLine,
+  LuChartColumn,
 } from "react-icons/lu";
 
 interface RouteProp {
@@ -21,9 +21,9 @@ interface RouteProp {
 export const useRoutes = () => {
   const routes: RouteProp[] = [
     {
-      label: "Home",
-      href: "/",
-      icon: LuHouse,
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: LuChartColumn,
     },
     {
       label: "Transfer",

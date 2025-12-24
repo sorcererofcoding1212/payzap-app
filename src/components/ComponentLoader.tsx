@@ -3,7 +3,7 @@ export const ComponentLoader = () => {
     <div role="status">
       <svg
         aria-hidden="true"
-        className="size-8 text-base-content/80 animate-spin fill-purple-600"
+        className="size-8 text-base-content/80 animate-spin fill-base-content"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

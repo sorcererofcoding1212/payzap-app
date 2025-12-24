@@ -302,7 +302,7 @@ export const TransferMoneyCard = ({
             onClick={toggleVariant}
             disabled={isSubmittingForm}
             className="text-[13.1px] lg:px-6 lg:text-sm w-full lg:w-fit"
-            variant={"teritary"}
+            variant={"card"}
             size={"card"}
           >
             {variant === "Bank" ? "Wallet Transfer" : "Bank Transfer"}
