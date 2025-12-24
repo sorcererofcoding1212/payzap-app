@@ -135,10 +135,11 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
                     }
 
                     if (pathName === route.href) return;
-                    if (!route.href) {
-                      return;
-                    }
+
+                    if (!route.href) return;
+
                     router.push(route.href);
+                    setIsOpen(false);
                   }}
                   className={cn(
                     "flex px-6 mx-4 rounded-md text-base-content gap-x-5 items-center py-3",

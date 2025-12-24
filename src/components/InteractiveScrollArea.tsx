@@ -43,8 +43,8 @@ export const InteractiveScrollArea = ({
       </ScrollAreaPrimitive.Scrollbar>
 
       {showIndicator && (
-        <div className="absolute bottom-4 left-1/2 p-2 bg-base-content/70 rounded-full -translate-x-1/2 animate-bounce">
-          <ChevronDown className="text-orange-400 lg:text-orange-500" />
+        <div className="absolute bottom-4 left-1/2 p-2 bg-base-content/60 rounded-full -translate-x-1/2 animate-bounce">
+          <ChevronDown className="text-base-content" />
         </div>
       )}
     </ScrollAreaPrimitive.Root>
