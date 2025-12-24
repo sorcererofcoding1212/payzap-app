@@ -10,6 +10,7 @@ import { InteractiveScrollArea } from "./InteractiveScrollArea";
 import { NotificationComponent } from "../features/notification/components/NotificationComponent";
 import { ComponentLoader } from "./ComponentLoader";
 import { useRealtimeNotifications } from "@/features/notification/hooks/useRealtimeNotifications";
+import { useRef } from "react";
 
 export const DesktopSidebar = () => {
   const routes = useRoutes();
@@ -27,6 +28,15 @@ export const DesktopSidebar = () => {
     unreadNotifications,
     loading,
   } = useRealtimeNotifications();
+
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollTowardsEnd = () => {
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
 
   return (
     <div className="w-full h-full border-r border-base-300">
@@ -54,7 +64,10 @@ export const DesktopSidebar = () => {
               ></RefreshCcw>
             </div>
           </div>
-          <InteractiveScrollArea className="mt-8 flex pb-4 items-center px-4 justify-center h-[75vh] w-full flex-col">
+          <InteractiveScrollArea
+            onClick={scrollTowardsEnd}
+            className="mt-8 flex pb-4 items-center px-4 justify-center h-[75vh] w-full flex-col"
+          >
             {loading ? (
               <div className="w-full flex justify-center">
                 <ComponentLoader />
@@ -72,6 +85,7 @@ export const DesktopSidebar = () => {
                 />
               ))
             )}
+            <div className="h-2" ref={scrollRef}></div>
           </InteractiveScrollArea>
         </div>
       ) : (

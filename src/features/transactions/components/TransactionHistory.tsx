@@ -9,8 +9,9 @@ import { BankTransactionCard } from "./BankTransactionCard";
 import { useQuery } from "@tanstack/react-query";
 import { getTransactions } from "../../../actions/getTransactions";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { TransactionAccountHistory } from "./TransactionAccountHistory";
+import { InteractiveScrollArea } from "@/components/InteractiveScrollArea";
 
 export const TransactionHistory = () => {
   const { data, isLoading } = useQuery({
@@ -23,6 +24,15 @@ export const TransactionHistory = () => {
     useState<string>("");
 
   const [counterPartyName, setCounterPartyName] = useState<string>("");
+
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollTowardsEnd = () => {
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
 
   return (
     <Card className="lg:w-[50%] w-full text-center lg:text-left">
@@ -66,7 +76,10 @@ export const TransactionHistory = () => {
             ) : (
               <>
                 {data.length > 0 ? (
-                  <ScrollArea className="flex flex-col px-6 h-96">
+                  <InteractiveScrollArea
+                    onClick={scrollTowardsEnd}
+                    className="flex flex-col px-6 h-96"
+                  >
                     {data.map((txn) => (
                       <div
                         key={txn.id}
@@ -106,7 +119,8 @@ export const TransactionHistory = () => {
                         )}
                       </div>
                     ))}
-                  </ScrollArea>
+                    <div className="h-2" ref={scrollRef}></div>
+                  </InteractiveScrollArea>
                 ) : (
                   <div className="h-56">
                     <div className="font-semibold mt-4 text-base-content text-center text-lg">
