@@ -1,15 +1,19 @@
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { ChevronDown } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ReactNode } from "react";
 import { cn } from "../lib/utils";
+
+interface InteractiveScrollAreaProps {
+  className?: string;
+  children: ReactNode;
+  onClick?: () => void;
+}
 
 export const InteractiveScrollArea = ({
   className,
   children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
+  onClick,
+}: InteractiveScrollAreaProps) => {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [showIndicator, setShowIndicator] = useState(false);
 
@@ -43,8 +47,8 @@ export const InteractiveScrollArea = ({
       </ScrollAreaPrimitive.Scrollbar>
 
       {showIndicator && (
-        <div className="absolute bottom-4 left-1/2 p-2 bg-base-content/60 rounded-full -translate-x-1/2 animate-bounce">
-          <ChevronDown className="text-base-content" />
+        <div className="absolute bottom-4 left-1/2 p-2 bg-base-content/60 lg:cursor-pointer rounded-full -translate-x-1/2 animate-bounce">
+          <ChevronDown onClick={onClick} className="text-base-content" />
         </div>
       )}
     </ScrollAreaPrimitive.Root>

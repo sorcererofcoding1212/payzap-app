@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { ArrowLeft, MenuIcon, RefreshCcw } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -36,6 +36,15 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
     unreadNotifications,
     loading,
   } = useRealtimeNotifications();
+
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollTowardsEnd = () => {
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
 
   return (
     <Sheet
@@ -76,7 +85,10 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
             />
           </SidebarHeader>
           <SidebarMenu className="mt-2">
-            <InteractiveScrollArea className="mt-8 flex pb-4 items-center px-4 justify-center h-[75vh] w-full flex-col">
+            <InteractiveScrollArea
+              onClick={scrollTowardsEnd}
+              className="mt-8 flex pb-4 items-center px-4 justify-center h-[75vh] w-full flex-col"
+            >
               {loading ? (
                 <div className="w-full flex justify-center">
                   <ComponentLoader />
@@ -94,6 +106,7 @@ export const MobileSidebar = ({ name }: MobileSidebarProps) => {
                   />
                 ))
               )}
+              <div className="h-2" ref={scrollRef}></div>
             </InteractiveScrollArea>
           </SidebarMenu>
         </SheetContent>

@@ -3,12 +3,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAccountTransactions } from "../actions/getAccountTransactions";
 import { UserAvatar } from "@/components/UserAvatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn, getTransactionDate, getTransactionTime, P2P } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { XIcon } from "lucide-react";
 import { TransactionCard } from "./TransactionCard";
+import { InteractiveScrollArea } from "@/components/InteractiveScrollArea";
+import { useRef } from "react";
 
 interface TransactionAccountHistoryProps {
   counterPartyAccountId: string;
@@ -27,6 +28,14 @@ export const TransactionAccountHistory = ({
     staleTime: 30_000,
     enabled: !!counterPartyAccountId,
   });
+  const scrollRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollTowardsEnd = () => {
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
   return (
     <div className="px-3 lg:px-6 text-base-content">
       <div className="bg-base-300 py-2 lg:py-3 relative">
@@ -41,7 +50,10 @@ export const TransactionAccountHistory = ({
           />
         </div>
       </div>
-      <ScrollArea className="bg-base-100 text-center h-72 lg:h-56 px-3 lg:px-6">
+      <InteractiveScrollArea
+        onClick={scrollTowardsEnd}
+        className="bg-base-100 text-center h-72 lg:h-56 px-3 lg:px-6"
+      >
         {isLoading || !data ? (
           <div className="flex flex-col gap-y-4 py-3">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -104,7 +116,8 @@ export const TransactionAccountHistory = ({
             })}
           </>
         )}
-      </ScrollArea>
+        <div className="h-2" ref={scrollRef}></div>
+      </InteractiveScrollArea>
     </div>
   );
 };
