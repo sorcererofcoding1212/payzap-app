@@ -46,7 +46,6 @@ export const SigninCard = () => {
     const res = await authenticate(values);
 
     if (res?.ok) {
-      console.log("Control reached here");
       toast.success("Logged in");
       router.push("/dashboard");
     }
