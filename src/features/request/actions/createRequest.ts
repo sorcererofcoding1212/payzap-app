@@ -47,6 +47,9 @@ export const createRequest = async (amount: number, walletId: string) => {
       },
     });
 
+    if (requestTo?.id === requestBy?.id)
+      throw new Error(errorMessage.INVALID_REQUEST);
+
     if (!requestBy || !requestTo || !requestTo.user.emailVerified)
       throw new Error(errorMessage.ACCOUNT_NOT_FOUND);
 
